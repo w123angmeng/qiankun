@@ -4,7 +4,8 @@
     <ul class="mainw">
         <li class="subSysItem" v-for="(item, ind) in sysList" :key="ind">
             <router-link :to="item.path">
-                <img src="" alt="">
+                <!-- <img src="" alt=""> -->
+                <i class="img el-icon-picture-outline"></i>
                 <div class="name">{{item.name}}</div>
             </router-link>
         </li>
@@ -13,14 +14,14 @@
 </template>
 
 <script>
-import NavMenu from "@/views/common/NavMenu";
+// import NavMenu from "@/views/common/NavMenu";
 import HeaderComp from "@/views/common/HeaderComp"
 
 export default {
   name: "MainView",
   components: {
     HeaderComp,
-    NavMenu
+    // NavMenu
   },
   data() {
     return {
@@ -46,9 +47,10 @@ export default {
 .mainw {
     display: flex;
     .subSysItem {
-        img {
-            width: 66px;
-            height: 66px;
+        .img {
+            font-size: 66px;
+            // width: 66px;
+            // height: 66px;
         }
         .name {
             height: 40px;

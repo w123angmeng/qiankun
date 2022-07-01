@@ -5,7 +5,7 @@
     </div>
     <div class="rw">
         当前登录科室：微机室
-        <el-button type="text"> | 返回首页</el-button>
+        <el-button type="text" @click="btnClickBack"> | 返回首页</el-button>
     </div>
   </div>
 </template>
@@ -17,6 +17,13 @@ export default {
   components: {
     // HelloWorld,
   },
+  methods: {
+    btnClickBack() {
+        this.$router.push({
+                    path: "/"
+                })
+    }
+  }
 };
 </script>
 <style lang="scss" scoped>

@@ -11,25 +11,21 @@
             @close="handleClose"
             :collapse="isCollapse"
         >
-            <el-submenu index="1">
+            <el-submenu index="1" v-for="(item, ind) in menuList" :key="ind">
                 <template slot="title">
-                    <i class="el-icon-location"></i>
-                    <span slot="title">导航一</span>
+                    <!-- <router-link :to="item.path"> -->
+                        <i class="el-icon-location"></i>
+                        <span slot="title">{{item.name}}</span>
+                    <!-- </router-link> -->
                 </template>
-                <el-menu-item-group>
-                    <span slot="title">分组一</span>
-                    <el-menu-item index="1-1">选项1</el-menu-item>
-                    <el-menu-item index="1-2">选项2</el-menu-item>
+                <el-menu-item-group v-for="(cItem, cInd) in item.children" :key="`${ind}-${cInd}`">
+                    <router-link :to="cItem.path">
+                        <el-menu-item :index="`${ind}-${cInd}`">{{cItem.name}}</el-menu-item>
+                    </router-link>
+                    
                 </el-menu-item-group>
-                <el-menu-item-group title="分组2">
-                    <el-menu-item index="1-3">选项3</el-menu-item>
-                </el-menu-item-group>
-                <el-submenu index="1-4">
-                    <span slot="title">选项4</span>
-                    <el-menu-item index="1-4-1">选项1</el-menu-item>
-                </el-submenu>
             </el-submenu>
-            <el-menu-item index="2">
+            <!-- <el-menu-item index="2">
                 <i class="el-icon-menu"></i>
                 <span slot="title">导航二</span>
             </el-menu-item>
@@ -40,7 +36,7 @@
             <el-menu-item index="4">
                 <i class="el-icon-setting"></i>
                 <span slot="title">导航四</span>
-            </el-menu-item>
+            </el-menu-item> -->
         </el-menu>
     </div>
 </template>
@@ -53,7 +49,69 @@ export default {
     },
     data() {
         return {
-           isCollapse: true 
+           isCollapse: true,
+           menuList: [] 
+        }
+    },
+    created() {
+        console.log("当前路由：", this.$route.path)
+        switch(this.$route.path) {
+            case "/app1":
+                this.menuList = [
+                    {
+                        name: "项目一",
+                        children: [
+                            {
+                                path: "/app1/demo1",
+                                name: "子项目一",
+                            },
+                            {
+                                path: "/app1/demo2",
+                                name: "子项目二",
+                            }
+                        ]
+                    },
+                    {
+                        path: "/app1/demo2",
+                        name: "项目二",
+                        children: [
+                            {
+                                path: "/app1/demo2",
+                                name: "子项目二",
+                            }
+                        ]
+                    }
+                ]
+                break;
+            case "/app2":
+                this.menuList = [
+                    {
+                        name: "项目一",
+                        children: [
+                            {
+                                path: "/app2/demo1",
+                                name: "子项目一",
+                            },
+                            {
+                                path: "/app2/demo2",
+                                name: "子项目二",
+                            }
+                        ]
+                    },
+                    {
+                        path: "/app2/demo2",
+                        name: "项目二",
+                        children: [
+                            {
+                                path: "/app2/demo2",
+                                name: "子项目二",
+                            }
+                        ]
+                    }
+                ]
+                break;
+            default:
+                break;
         }
     },
     methods: {

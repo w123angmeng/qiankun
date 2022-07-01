@@ -1,37 +1,50 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import HomeView from "../views/mainView.vue";
+// import HomeView from "../views/mainView.vue";
 
 Vue.use(VueRouter);
 
 const routes = [{
         path: "/",
-        name: "welcome",
+        name: "parent",
         component: () =>
-        import( /* webpackChunkName: "about" */ "../views/welcome.vue")
+        import( /* webpackChunkName: "about" */ "../views/welcome.vue"),
+        children:[
+            {
+                path: "/welcome",
+                name: "welcome",
+                redirect: "/welcome", 
+            }
+        ]
     },
     {
-        path: "/main",
-        name: "main",
+        path: "/app1",
+        name: "app1",
         component: () =>
-        import( /* webpackChunkName: "about" */ "../views/mainView.vue"),
-        children:[
-            // {
-            //     path: "app",
-            //     name: "app",
-            //     component: () =>
-            //         import( /* webpackChunkName: "about" */ "../views/AboutView.vue"),
-            // },
-            // {
-            //     path: "otherApp",
-            //     name: "otherApp",
-            //     component: () =>
-            //         import( /* webpackChunkName: "about" */ "../views/OtherView.vue"),
-            // },
-        ]
+        import("../views/mainView.vue"),
+        children:[]
+    },
+    {
+        path: "/app1/*",
+        name: "app1",
+        component: () =>
+        import("../views/mainView.vue"),
+        children:[]
+    },
+    {
+        path: "/app2",
+        name: "app2",
+        component: () =>
+        import( "../views/mainView.vue"),
+        children:[]
+    },
+    {
+        path: "/app2/*",
+        name: "app2",
+        component: () =>
+        import("../views/mainView.vue"),
+        children:[]
     }
-    
-    
 ];
 
 const router = new VueRouter({
