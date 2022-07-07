@@ -4,7 +4,7 @@
         <img alt="Vue logo" src="../../assets/logo.png" />医院名称
     </div>
     <div class="rw">
-        当前登录科室：微机室
+        当前登录科室：微机室 {{userInfo.name}}
         <el-button type="text" @click="btnClickBack"> | 返回首页</el-button>
     </div>
   </div>
@@ -17,6 +17,14 @@ export default {
   components: {
     // HelloWorld,
   },
+  computed: {
+        ...mapState({
+            userInfo: state => state.user.userInfo
+        }),
+        ...mapMutations({
+                setUserInfo: "user/setUserInfo"
+            }),
+    },
   methods: {
     btnClickBack() {
         this.$router.push({
