@@ -1,20 +1,15 @@
-export default module = {
+export default {
 	namespaced: true,
     state: {
-		scanInfo: "", // PDA扫码信息
-		temperature: "", // PDA体温
-        hasNetWork: true, // 是否有网络
+		computerInfo: "", // 电脑信息
     },
     mutations: {
-        setScanInfo(state, data) {
-            state.scanInfo =  data
+        setComputerInfo(state, data) {
+            state.computerInfo =  data
         },
-		setTemperature(state, data) {
-			state.temperature = data
-		},
-		setNetwork(state, data) {
-			state.hasNetWork = data
-		}
+        delComputerInfo(state) {
+            state.computerInfo = {}
+        }
     },
     actions: {
         // actions一般是处理异步逻辑

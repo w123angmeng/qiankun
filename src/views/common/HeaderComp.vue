@@ -6,12 +6,14 @@
     <div class="rw">
         当前登录科室：微机室 {{userInfo.name}}
         <el-button type="text" @click="btnClickBack"> | 返回首页</el-button>
+        <el-button type="text" @click="btnClickLogout"> | 退出登录</el-button>
     </div>
   </div>
 </template>
 
 <script>
-
+// import { mapMutations, mapGetters } from "vuex";
+import { mapMutations, mapState} from "vuex";
 export default {
   name: "HeaderComp",
   components: {
@@ -30,15 +32,22 @@ export default {
         this.$router.push({
                     path: "/"
                 })
+    },
+    btnClickLogout() {
+        this.$router.push({
+                path: "/login"
+        })
     }
   }
 };
 </script>
-<style lang="scss" scoped>
+<style lang="scss">
 .headerWrap {
     height: 48px;
     line-height: 48px;
-    color: #FFFFFF;
+    * {
+        color: #FFFFFF;
+    }
 }
 .fw {
     display: flex;

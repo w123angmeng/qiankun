@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="48px" height="48px" viewBox="0 0 48 48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 53.2 (72643) - https://sketchapp.com -->
+    <title>分组 2</title>
+    <desc>Created with Sketch.</desc>
+    <g id="1.6" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="导航页面">
+            <g id="顶部导航">
+                <g id="分组-2">
+                    <rect id="矩形" fill="#1890FF" x="0" y="0" width="48" height="48"></rect>
+                    <g id="菜单-展开" transform="translate(16.000000, 16.000000)" fill-rule="nonzero">
+                        <g id="分组">
+                            <rect id="矩形" fill="#000000" opacity="0" x="0" y="0" width="16" height="16"></rect>
+                            <path d="M0.8,0.88 L15.2,0.88 C15.64184,0.88 16,1.23816 16,1.68 C16,2.12184 15.64184,2.48 15.2,2.48 L0.8,2.48 C0.35816,2.48 0,2.12184 0,1.68 C0,1.23816 0.35816,0.88 0.8,0.88 Z M0.8,7.12 L15.2,7.12 C15.64184,7.12 16,7.47816 16,7.92 C16,8.36184 15.64184,8.72 15.2,8.72 L0.8,8.72 C0.35816,8.72 0,8.36184 0,7.92 C0,7.47816 0.35816,7.12 0.8,7.12 L0.8,7.12 Z M0.8,13.36 L15.2,13.36 C15.64184,13.36 16,13.71816 16,14.16 C16,14.60184 15.64184,14.96 15.2,14.96 L0.8,14.96 C0.35816,14.96 0,14.60184 0,14.16 C0,13.71816 0.35816,13.36 0.8,13.36 Z" id="形状" fill="#FFFFFF"></path>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

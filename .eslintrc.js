@@ -17,5 +17,6 @@ module.exports = {
     "prettier/prettier": "off",
     "vue/multi-word-component-names": 0,
     'vue/no-mutating-props': 0,
+    "no-global-assign": ["error", {"exceptions": ["Object"]}]
   },
 };

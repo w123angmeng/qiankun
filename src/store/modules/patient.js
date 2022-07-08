@@ -1,4 +1,4 @@
-export default module = {
+export default {
 	namespaced: true,
     state: {
 		patientInfo: {}, // 患者信息
@@ -8,7 +8,7 @@ export default module = {
 			sessionStorage.setItem("patientInfo", JSON.stringify(data));
             state.patientInfo =  data
         },
-		delPatientInfo(state, data) {
+		delPatientInfo(state) {
             sessionStorage.removeItem("patientInfo")
 			state.patientInfo = {}
 		}
