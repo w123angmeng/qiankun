@@ -1,6 +1,6 @@
 <template>
-<!-- <div class="login-wrap" :style="{ backgroundImage: 'url(' + bg + ')' }"> -->
-    <div class="login-wrap">
+<div class="login-wrap" :style="{ backgroundImage: 'url(' + bg + ')' }">
+    <!-- <div class="login-wrap"> -->
         <!-- 登录 -->
         <div class="ms-login">
             <div class="ms-title">{{ systemTitle }}</div>
@@ -81,7 +81,7 @@ export default {
             isSameOne: true, // 用来判断是否是同一人登陆
             fullscreen: false, // 是否全屏
             is360: false,
-            // bg: require("@/assets/images/login/login.png"),
+            bg: require("@/assets/images/login/login.png"),
             userInfo: {
                 idUserAccount: "",
                 empName: "",

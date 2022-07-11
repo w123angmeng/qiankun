@@ -27,6 +27,9 @@ export default {
                 setUserInfo: "user/setUserInfo"
             }),
     },
+    created(){
+        console.log("main this:", this)
+    },
   methods: {
     btnClickBack() {
         this.$router.push({
