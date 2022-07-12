@@ -9,9 +9,12 @@ console.log("store", store)
 var tokenStr = store.state.user.token
 instance.defaults.timeout = 60000;
 instance.defaults.headers.token = tokenStr;
+instance.defaults.baseURL = window.globalUrl.baseURL;
 // 添加请求拦截器
 instance.interceptors.request.use(function (config) {
     // 在发送请求之前做些什么
+    console.log("===config:", config)
+    config.headers.token = store.state.user.token
     return config;
   }, function (error) {
     // 对请求错误做些什么
@@ -37,7 +40,7 @@ instance.interceptors.response.use(function (response) {
                 'content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
             },
         }).then((res) => {
-            return res
+            return res.data
             // return checkStatus(res);
         }).then(
             (res) => {
@@ -59,7 +62,7 @@ instance.interceptors.response.use(function (response) {
         if (responseType) headParams.responseType = responseType;
         return instance(headParams).then(
             (response) => {
-                return response
+                return response.data
                 // return checkStatus(response);
             }
         ).then(
@@ -86,11 +89,11 @@ instance.interceptors.response.use(function (response) {
         }
         if (responseType) headParams.responseType = responseType
         return instance(headParams).then((res) => {
-            return res
+            return res.data
             // return checkStatus(res);
         }).then(
             (res) => {
-                return res
+                return res.data
                 // return checkCode(res);
             }
         )

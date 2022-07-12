@@ -13,7 +13,7 @@
 
 <script>
 // import { mapMutations, mapGetters } from "vuex";
-import { mapMutations, mapState} from "vuex";
+import {mapState} from "vuex";
 export default {
   name: "HeaderComp",
   components: {
@@ -23,9 +23,6 @@ export default {
         ...mapState({
             userInfo: state => state.user.userInfo
         }),
-        ...mapMutations({
-                setUserInfo: "user/setUserInfo"
-            }),
     },
     created(){
         console.log("main this:", this)

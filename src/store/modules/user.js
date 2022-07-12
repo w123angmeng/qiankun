@@ -14,6 +14,7 @@ export default {
 			state.patientInfo = {}
 		},
         setToken(state, data) {
+            sessionStorage.setItem("token", data);
             state.token =  data
         },
         delToken(state) {

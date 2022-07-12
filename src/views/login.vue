@@ -1,6 +1,6 @@
 <template>
-<div class="login-wrap" :style="{ backgroundImage: 'url(' + bg + ')' }">
-    <!-- <div class="login-wrap"> -->
+    <div class="login-wrap" :style="{ backgroundImage: 'url(' + bg + ')' }">
+        <!-- <div class="login-wrap"> -->
         <!-- 登录 -->
         <div class="ms-login">
             <div class="ms-title">{{ systemTitle }}</div>
@@ -43,6 +43,8 @@
 <script>
 // import * as items from "@/assets/utils.js";
 import { mapMutations } from "vuex";
+import md5 from "js-md5";
+let that = null
 // import bus from "@/components/common/bus.js";
 // import copy from "@/assets/CommonUtils/component/copyright/copyright.vue"
 // import { mixinMedicalExe } from '@/components/page/ChargeManage_WEB/common/mixins/mixinMedicalExe'; // 医保调用exe
@@ -92,76 +94,206 @@ export default {
     //     console.log("====window.globalUrl", window.globalUrl)
     // },
     mounted() {
-        console.log("====window.globalUrl", window.globalUrl)
-    },
-    computed: {
-        ...mapMutations({
-            setToken: "user/setToken",
-        }),
+        that = this
+        console.log("====window.globalUrl", that, window.globalUrl);
     },
     methods: {
+        ...mapMutations({
+            setToken: "user/setToken",
+            setUserInfo: "user/setUserInfo",
+            setModuleList: "common/setModuleList",
+            setRoleList: "common/setRoleList"
+        }),
         //登录业务
         submitForm(formName) {
-            this.$refs[formName].validate((valid) => {
+            this.$refs[formName].validate(async (valid) => {
                 if (valid) {
-                    this.is360 = this._mime(
-                        "type",
-                        "application/vnd.chromium.remoting-viewer"
+                    let tokenRes = await this.getToken();
+                    let userRes = await this.getLoginUser(tokenRes.idUserAccount);
+                    //判断用户有哪些权限：只有一个模块还是多个(例：只有门诊，直接到默认路由；多个模块，跳转欢迎页列表)
+                    let modulData = userRes.moduleList[0];
+                    let roleStr = "";
+                    userRes.roleList.map((item) => {
+                        roleStr += item.idRole + ",";
+                    });
+                    let obj = {
+                        idSystem: modulData.value, //模块ID
+                        idRoles: roleStr, //角色ID
+                    };
+                    await this.listCommomPage(obj); //查询当前模块的权限页面
+                    sessionStorage.setItem(
+                        "menuLabel",
+                        JSON.stringify(modulData)
                     );
-                    if (this.isChrome() && this.is360) {
-                        // 兼容360浏览器写法
-                        let element = document.documentElement;
-                        if (element.webkitRequestFullScreen) {
-                            element.webkitRequestFullScreen();
-                        }
-                    }
-                    let newObj = Object.assign({}, this.ruleForm);
-                    newObj.password = this.$md5(newObj.password);
-                    this.$axios
-                        .post("upm/login", newObj)
-                        .then((res) => {
-                            if (res.success) {
-                                this.$notify({
-                                    type: "success",
-                                    message:
-                                        "欢迎你," +
-                                        this.ruleForm.accountName +
-                                        "!",
-                                    duration: 1000,
-                                });
-                                let idUserAccount =
-                                    sessionStorage.getItem("idUserAccount")
-                                if (idUserAccount == res.data.idUserAccount) {
-                                    this.isSameOne = true;
-                                } else {
-                                    this.isSameOne = false;
-                                }
-                                sessionStorage.setItem(
-                                    "idUserAccount",
-                                    res.data.idUserAccount
-                                );
-                                sessionStorage.setItem("token", res.data.token);
-                                sessionStorage.setItem(
-                                    "login",
-                                    JSON.stringify(res.data)
-                                );
-                            } else {
-                                this.$message({
-                                    type: "warning",
-                                    message: res.message,
-                                    showClose: true,
-                                    customClass: "showMessageZIndexFlag",
-                                });
-                                return false;
-                            }
+                    await this.getSecondMenuList(obj); //查当前系统下二级菜单列表
+
+                    if (userRes.moduleList.length > 1) {
+                        //当前登录医生有多个模块
+                        this.$router.push({
+                            path: "/"
                         })
-                        .then((res) => {
-                            console.log("res", res);
-                        });
+                    } else {
+                        //当前登录医生只有1个模块
+                        let goUrl = modulData.resourceUrl;
+                        //当前登录医生只有一个模块权限
+                        this.comeRouter({ path: `/${goUrl}` });
+                    }
                 } else {
                     return false;
                 }
             });
+        },
+        getToken() {
+            let newObj = Object.assign({}, this.ruleForm);
+            newObj.password = md5(newObj.password);
+            return this.$axios.post("upm/login", newObj).then((res) => {
+                console.log("res:", res);
+                if (res.success) {
+                    this.$message({
+                        type: "success",
+                        message: "欢迎你," + this.ruleForm.accountName + "!",
+                        duration: 1000,
+                    });
+                    // let idUserAccount =
+                    //     sessionStorage.getItem("idUserAccount")
+                    // if (idUserAccount == res.data.idUserAccount) {
+                    //     this.isSameOne = true;
+                    // } else {
+                    //     this.isSameOne = false;
+                    // }
+                    // sessionStorage.setItem(
+                    //     "idUserAccount",
+                    //     res.data.idUserAccount
+                    // );
+
+                    this.setToken(res.data.token);
+                    return res.data;
+                    // sessionStorage.setItem("token", res.data.token);
+                    // sessionStorage.setItem(
+                    //     "login",
+                    //     JSON.stringify(res.data)
+                    // );
+                } else {
+                    this.$message({
+                        type: "warning",
+                        message: res.message,
+                        showClose: true,
+                        customClass: "showMessageZIndexFlag",
+                    });
+                    return false;
+                }
+            });
+        },
+        getLoginUser(idUserAccount = "") {
+            return this.$axios
+                .get("upm/findAccountInfo", {
+                    idUserAccount: idUserAccount,
+                })
+                .then((resp) => {
+                    if (resp.success) {
+                        // sessionStorage.setItem(
+                        //     "moduleList",
+                        //     JSON.stringify(resp.data.moduleList)
+                        // );
+                        // sessionStorage.setItem(
+                        //     "roleList",
+                        //     JSON.stringify(resp.data.roleList)
+                        // );
+
+                        // let user = resp.data;
+                        // if (this.thirdSigns) {
+                        //     user.thirdSign = "EMR&ND";
+                        // }
+                        // if (process.env.orgName == "hlws") {
+                        //     user.idEmp = user.empCode;
+                        // }
+                        this.setModuleList(resp.data.moduleList)
+                        this.setRoleList(resp.data.roleList)
+                        this.setUserInfo(resp.data);
+                        return resp.data
+                        // sessionStorage.setItem("user", JSON.stringify(user));
+                        // this.API.api.user = resp.data;
+                        // this.API.api.idOrg = resp.data.idOrg;
+                        // bus.$emit("outOfToken", false);
+                        // 医保登录
+
+                        // if (user.roleList.length) {
+                        //     let isChargeManage = user.roleList.some(
+                        //         (v) => v.name == "收费员"
+                        //     );
+                        //     isChargeManage && this.getMedicalInsFn();
+                        // }
+                        // let sock = false;
+                        // this.findWorkerIdDept(user.idEmp).then(async (data) => {
+                        //     for (let i = 0; i < data.length; i++) {
+                        //         if (data[i].label == user.deptName) {
+                        //             sock = true;
+                        //             break;
+                        //         }
+                        //     }
+                        //     // 号源池 人员关联工作组为空可以正常登陆
+                        //     if (!sock && data.length) {
+                        //         let userParmas = this.getUserStorage();
+                        //         userParmas.idDept = data[0].value;
+                        //         userParmas.wardCode = data[0].value;
+                        //         userParmas.deptName = data[0].label;
+                        //         sessionStorage.setItem(
+                        //             "user",
+                        //             JSON.stringify(userParmas)
+                        //         );
+                        //     }
+                        //     this.SET_TOKENSTATUS(false); // 当用户主动点击时, tokenStaus设置为true, 登录成功时设置为false
+                        //     if (
+                        //         this.isSameOne &&
+                        //         window.location.href.split("#")[1] != "/login"
+                        //     ) {
+                        //         // this.comeRouter({
+                        //         //     path: window.location.href.split("#")[1],
+                        //         // });
+                        //     } else {
+                        //         //判断用户有哪些权限：只有一个模块还是多个(例：只有门诊，直接到默认路由；多个模块，跳转欢迎页列表)
+                        //         let modulData = resp.data.moduleList[0];
+
+                        //         let roleStr = "";
+                        //         resp.data.roleList.map((item) => {
+                        //             roleStr += item.idRole + ",";
+                        //         });
+
+                        //         let obj = {
+                        //             idSystem: modulData.value, //模块ID
+                        //             idRoles: roleStr, //角色ID
+                        //         };
+                        //         await this.listCommomPage(obj); //查询当前模块的权限页面
+                        //         sessionStorage.setItem(
+                        //             "menuLabel",
+                        //             JSON.stringify(modulData)
+                        //         );
+                        //         await this.getSecondMenuList(obj); //查当前系统下二级菜单列表
+
+                        //         if (resp.data.moduleList.length > 1) {
+                        //             //当前登录医生有多个模块
+                        //             this.comeRouter({ path: "/welcome" });
+                        //         } else {
+                        //             //当前登录医生只有1个模块
+                        //             let goUrl = modulData.resourceUrl;
+                        //             //当前登录医生只有一个模块权限
+                        //             this.comeRouter({ path: `/${goUrl}` });
+                        //         }
+                        //     }
+
+                            // bus.$emit("reload", true);
+                            // 登录完成默认全屏
+                            // this.fullScreen();
+
+                            // this.isMCLogin();
+                        // });
+                    } else {
+                        this.$message({
+                            message: resp.message,
+                            type: "warning",
+                        });
+                    }
+                });
         },
 
         //查当前模块下常用页面列表
@@ -179,6 +311,20 @@ export default {
                     message: res.message,
                 });
             }
+        },
+        getRouteModuleList(obj){
+            // return this.$axios.post('/upm/resource/listCommomPage', obj);
+            return this.$axios.post('/upm/resource/listCommomPage', obj).then(res=>{
+                if(res.success && res.data && res.data.length){ //添加字段index，用于处理小导航高亮
+                    res.data.forEach(item=>{
+                        item.index = item.resourceUrl;
+                        if(item.otherSystemSign == this.CONSTANT.IS_OTHER_SYSTEM_SIGN){
+                            item.index = item.idResource;
+                        }
+                    })
+                }
+                return res;
+            })
         },
         //查当前系统下二级菜单列表
         async getSecondMenuList(obj) {
@@ -198,6 +344,11 @@ export default {
             }
             // 把二级菜单存在缓存里，路由守卫的时候会用对应的id来查按钮权限
             sessionStorage.setItem("secondMenuList", JSON.stringify(data));
+        },
+        awaitWrap(promise) {
+            return promise
+                .then(data => [null, data])
+                .catch(err => [err, null])
         },
         //查询工作组科室
         async findWorkerIdDept(idEmp) {
