@@ -4,8 +4,9 @@ export default {
 		computerInfo: "", // 电脑信息
         moduleList: [], // 模块
         roleList: [], // 角色
-        menuLabel: {} // 默认模块
-
+        menuLabel: {}, // 选中模块
+        smallIconList: [], // 常用模块
+        secondMenuList: [], // 子菜单
     },
     mutations: {
         setComputerInfo(state, data) {
@@ -22,6 +23,14 @@ export default {
         setMenuLabel(state, data) {
             sessionStorage.setItem("menuLabel", JSON.stringify(data));
             state.menuLabel =  data
+        },
+        setSmallIconList(state, data) {
+            sessionStorage.setItem("smallIconList", JSON.stringify(data));
+            state.smallIconList =  data
+        },
+        setSecondMenuList(state, data) {
+            sessionStorage.setItem("secondMenuList", JSON.stringify(data));
+            state.secondMenuList =  data
         },
         delComputerInfo(state) {
             state.computerInfo = {}

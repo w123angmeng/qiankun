@@ -42,6 +42,7 @@
 </template>
 <script>
 // import { mapMutations, mapGetters } from "vuex";
+import {mapState} from "vuex";
 export default {
     name: "NavMenu",
     components: {
@@ -52,6 +53,11 @@ export default {
            isCollapse: true,
            menuList: [] 
         }
+    },
+     computed: {
+        ...mapState({
+            moduleList: state => state.common.moduleList
+        }),
     },
     created() {
         console.log("当前路由：", this.$route.path)

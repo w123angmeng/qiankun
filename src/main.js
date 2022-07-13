@@ -22,10 +22,10 @@ Vue.config.productionTip = false;
 
 registerMicroApps([
     {
-        name: 'app1',
+        name: 'outpNurse',
         entry: '//localhost:8081',
         container: '#container',
-        activeRule: '/app1',
+        activeRule: '/outpNurse',
     },
     {
         name: 'app2',

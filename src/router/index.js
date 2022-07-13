@@ -24,15 +24,15 @@ const routes = [{
         import("../views/login.vue")
     },
     {
-        path: "/app1",
-        name: "app1",
+        path: "/outpNurse",
+        name: "outpNurse",
         component: () =>
         import("../views/mainView.vue"),
         children:[]
     },
     {
-        path: "/app1/*",
-        name: "app1",
+        path: "/outpNurse/*",
+        name: "outpNurse",
         component: () =>
         import("../views/mainView.vue"),
         children:[]

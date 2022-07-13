@@ -2,19 +2,19 @@
     <div class="page">
         <HeaderComp></HeaderComp>
         <ul class="mainw">
-            <li class="subSysItem" v-for="(item, ind) in sysList" :key="ind">
-                <router-link :to="item.path">
+            <li class="subSysItem" v-for="item in moduleList" :key="item.value" @click="selectSysItem(item)">
+                <!-- <router-link :to="item.resourceUrl"> -->
                     <!-- <img src="" alt=""> -->
                     <i class="img el-icon-picture-outline"></i>
-                    <div class="name">{{ item.name }}</div>
-                </router-link>
+                    <div class="name">{{ item.label }}</div>
+                <!-- </router-link> -->
             </li>
         </ul>
     </div>
 </template>
 
 <script>
-import {mapState} from "vuex";
+import {mapState, mapMutations} from "vuex";
 // import NavMenu from "@/views/common/NavMenu";
 import HeaderComp from "@/views/common/HeaderComp";
 
@@ -24,32 +24,89 @@ export default {
         HeaderComp,
         // NavMenu
     },
-    data() {
-        return {
-            sysList: [
-                {
-                    name: "app1",
-                    path: "/app1",
-                },
-                {
-                    name: "app2",
-                    path: "/app2",
-                },
-            ],
-        };
-    },
     computed: {
         ...mapState({
-            moduleList: (state) => state.common.moduleList,
-        })
+            moduleList: state => state.common.moduleList,
+            roleList: state => state.common.roleList,
+        }),
+    },
+    data() {
+        return {
+            // sysList: [
+            //     {
+            //         label: "app1",
+            //         path: "/app1",
+            //     },
+            //     {
+            //         label: "app2",
+            //         path: "/app2",
+            //     },
+            // ],
+        };
     },
     created() {
         this.initData()
     },
     methods: {
+        ...mapMutations({
+            setMenuLabel: "common/setMenuLabel",
+            setSmallIconList: "common/setSmallIconList",
+            setSecondMenuList: "common/setSecondMenuList"
+        }),
         initData() {
             console.log("moduleList:", this.moduleList)
-        }
+        },
+        async selectSysItem(item) {
+            this.setMenuLabel(item)
+            let obj = {
+                idSystem:item.value,//模块ID
+                idRoles: this.roleList.map(v=>v.idRole).join(',') //角色ID
+            }
+            // 常用模块
+            let comRes = await this.getRouteModuleList(obj);
+            this.setSmallIconList(comRes.data)
+
+            // 查当前系统下二级菜单列表
+            let subData = await this.getSecondMenuList(obj);
+            this.setSecondMenuList(subData)
+            this.$router.push({
+                path: `/outpNurse/${item.resourceUrl}`
+            })
+        },
+        getRouteModuleList(obj){
+            // return this.$axios.post('/upm/resource/listCommomPage', obj);
+            return this.$axios.post('/upm/resource/listCommomPage', obj).then(res=>{
+                if(res.success && res.data && res.data.length){ //添加字段index，用于处理小导航高亮
+                    res.data.forEach(item=>{
+                        item.index = item.resourceUrl;
+                        if(item.otherSystemSign == this.CONSTANT.IS_OTHER_SYSTEM_SIGN){
+                            item.index = item.idResource;
+                        }
+                    })
+                }
+                return res;
+            })
+        },
+    
+        //查当前系统下二级菜单列表
+        async getSecondMenuList(obj){
+            // let data = [];
+            const [res] = await this.awaitWrap(this.$axios.get("/upm/listResBySystemWithId", {
+                selCondition: '',
+                idSystem: obj.idSystem,
+                idRoles: obj.idRoles
+            }));
+            if(res && res.success){
+                return res.data || [];
+            }else if(res && !res.success){
+                this.$message.warning(res.message);
+            }
+        },
+        awaitWrap(promise) {
+            return promise
+                .then(data => [null, data])
+                .catch(err => [err, null])
+        },
     }
 };
 </script>
