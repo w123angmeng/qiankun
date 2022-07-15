@@ -13,10 +13,10 @@
         >
             <el-submenu index="1" v-for="(item, ind) in menuList" :key="ind">
                 <template slot="title">
-                    <!-- <router-link :to="item.path"> -->
+                    <router-link :to="item.path">
                         <i class="el-icon-location"></i>
                         <span slot="title">{{item.name}}</span>
-                    <!-- </router-link> -->
+                    </router-link>
                 </template>
                 <el-menu-item-group v-for="(cItem, cInd) in item.children" :key="`${ind}-${cInd}`">
                     <router-link :to="cItem.path">
@@ -51,74 +51,74 @@ export default {
     data() {
         return {
            isCollapse: true,
-           menuList: [] 
+        //    menuList: [] 
         }
     },
      computed: {
         ...mapState({
-            moduleList: state => state.common.moduleList
+            menuList: state => state.common.secondMenuList
         }),
     },
     created() {
         console.log("当前路由：", this.$route.path)
-        switch(this.$route.path) {
-            case "/app1":
-                this.menuList = [
-                    {
-                        name: "项目一",
-                        children: [
-                            {
-                                path: "/app1/demo1",
-                                name: "子项目一",
-                            },
-                            {
-                                path: "/app1/demo2",
-                                name: "子项目二",
-                            }
-                        ]
-                    },
-                    {
-                        path: "/app1/demo2",
-                        name: "项目二",
-                        children: [
-                            {
-                                path: "/app1/demo2",
-                                name: "子项目二",
-                            }
-                        ]
-                    }
-                ]
-                break;
-            case "/app2":
-                this.menuList = [
-                    {
-                        name: "项目一",
-                        children: [
-                            {
-                                path: "/app2/demo1",
-                                name: "子项目一",
-                            },
-                            {
-                                path: "/app2/demo2",
-                                name: "子项目二",
-                            }
-                        ]
-                    },
-                    {
-                        path: "/app2/demo2",
-                        name: "项目二",
-                        children: [
-                            {
-                                path: "/app2/demo2",
-                                name: "子项目二",
-                            }
-                        ]
-                    }
-                ]
-                break;
-            default:
-                break;
-        }
+        // switch(this.$route.path) {
+        //     case "/app1":
+        //         this.menuList = [
+        //             {
+        //                 name: "项目一",
+        //                 children: [
+        //                     {
+        //                         path: "/app1/demo1",
+        //                         name: "子项目一",
+        //                     },
+        //                     {
+        //                         path: "/app1/demo2",
+        //                         name: "子项目二",
+        //                     }
+        //                 ]
+        //             },
+        //             {
+        //                 path: "/app1/demo2",
+        //                 name: "项目二",
+        //                 children: [
+        //                     {
+        //                         path: "/app1/demo2",
+        //                         name: "子项目二",
+        //                     }
+        //                 ]
+        //             }
+        //         ]
+        //         break;
+        //     case "/app2":
+        //         this.menuList = [
+        //             {
+        //                 name: "项目一",
+        //                 children: [
+        //                     {
+        //                         path: "/app2/demo1",
+        //                         name: "子项目一",
+        //                     },
+        //                     {
+        //                         path: "/app2/demo2",
+        //                         name: "子项目二",
+        //                     }
+        //                 ]
+        //             },
+        //             {
+        //                 path: "/app2/demo2",
+        //                 name: "项目二",
+        //                 children: [
+        //                     {
+        //                         path: "/app2/demo2",
+        //                         name: "子项目二",
+        //                     }
+        //                 ]
+        //             }
+        //         ]
+        //         break;
+        //     default:
+        //         break;
+        // }
     },
     methods: {
       handleOpen(key, keyPath) {

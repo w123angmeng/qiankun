@@ -1,6 +1,6 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-// import HomeView from "../views/mainView.vue";
+import store from '@/store';
 
 Vue.use(VueRouter);
 
@@ -58,5 +58,28 @@ const router = new VueRouter({
     base: process.env.BASE_URL,
     routes,
 });
+console.log("token:", store.state.user.token)
+// 判断是否需要登陆权限 以及是否登录
+router.beforeEach((to, from, next) => {
+    // if(to.matched.some(res => res.meta.requireAuth)) {
+        let token = store.state.user.token
+        if(to.path !== '/login' && !token) {
+            console.log("token不存在",to,from)
+            next('/login')
+        }else {
+            console.log("token存在1", to)
+            // next({
+            //     path: '/login',
+            //     // query: {
+            //     //     redirect: to.fullPath
+            //     // }
+            // })
+            next()
+            // next('/login')
 
+        }
+    // } else {
+    //     next()
+    // }
+})
 export default router;

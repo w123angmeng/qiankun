@@ -67,7 +67,9 @@ export default {
             this.setSmallIconList(comRes.data)
 
             // 查当前系统下二级菜单列表
-            let subData = await this.getSecondMenuList(obj);
+            let [err, res] = await this.getSecondMenuList(obj);
+            let subData = res.data
+            console.log("二级菜单：", subData,err)
             this.setSecondMenuList(subData)
             this.$router.push({
                 path: `/outpNurse/${item.resourceUrl}`
@@ -91,16 +93,18 @@ export default {
         //查当前系统下二级菜单列表
         async getSecondMenuList(obj){
             // let data = [];
-            const [res] = await this.awaitWrap(this.$axios.get("/upm/listResBySystemWithId", {
+            return await this.awaitWrap(this.$axios.get("/upm/listResBySystemWithId", {
                 selCondition: '',
                 idSystem: obj.idSystem,
                 idRoles: obj.idRoles
             }));
-            if(res && res.success){
-                return res.data || [];
-            }else if(res && !res.success){
-                this.$message.warning(res.message);
-            }
+            // console.log("===res:", res)
+            // if(res && res.success){
+            //     console.log("listResBySystemWithId:", res)
+            //     return res.data || [];
+            // }else if(res && !res.success){
+            //     this.$message.warning(res.message);
+            // }
         },
         awaitWrap(promise) {
             return promise
