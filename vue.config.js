@@ -36,7 +36,7 @@ module.exports = {
         // hot: true,
         // disableHostCheck: true,
         // 修改默认端口，和注册时一直
-        host: "localhost",
+        host: "localhost/",
         port: 8080,
         open: true,
         // overlay: {

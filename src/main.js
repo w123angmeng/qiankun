@@ -20,7 +20,7 @@ import {
 
 Vue.config.productionTip = false;
 let msg = {
-    data: store
+    store: store
 }
 registerMicroApps([
     {
