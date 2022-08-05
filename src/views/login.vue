@@ -207,7 +207,16 @@ export default {
                         // if (process.env.orgName == "hlws") {
                         //     user.idEmp = user.empCode;
                         // }
-                        this.setModuleList(resp.data.moduleList)
+                        let mduleList = resp.data.moduleList
+                        mduleList.push({
+                            isCommon: "0",
+                            label: "app2",
+                            resourceUrl: "demo1",
+                            serialNo: 88,
+                            systemIcon: "medic_app",
+                            value: "558cbc7c00008f0a123",
+                        })
+                        this.setModuleList(mduleList)
                         this.setRoleList(resp.data.roleList)
                         this.setUserInfo(resp.data);
                         return resp.data

@@ -57,6 +57,22 @@ export default {
             console.log("moduleList:", this.moduleList)
         },
         async selectSysItem(item) {
+            if(item.label == 'app2') {
+                this.setSecondMenuList([{
+                    id: "6969dac00000090a12",
+                    index: "demo1",
+                    name: "demo1",
+                },{
+                    id: "6969dac00000090a13",
+                    index: "demo2",
+                    name: "demo2",
+                },
+                ])
+                this.$router.push({
+                    path: `/app2/${item.resourceUrl}`
+                })
+                return
+            }
             this.setMenuLabel(item)
             let obj = {
                 idSystem:item.value,//模块ID

@@ -2,6 +2,8 @@
   <div class="headerWrap fw">
     <div class="lw">
         <img alt="Vue logo" src="../../assets/logo.png" />医院名称
+        <span>{{patientInfo ? `${patientInfo.name}-${patientInfo.sex}-${patientInfo.age}` : ''}}</span>
+        <span>全局状态{{$global}}</span>
     </div>
     <div class="rw">
         当前登录科室：微机室 {{userInfo.name}}
@@ -21,7 +23,8 @@ export default {
   },
   computed: {
         ...mapState({
-            userInfo: state => state.user.userInfo
+            userInfo: state => state.user.userInfo,
+            patientInfo: state => state.patient.patientInfo
         }),
     },
     created(){

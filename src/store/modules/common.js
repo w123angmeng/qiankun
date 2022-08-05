@@ -1,12 +1,12 @@
 export default {
 	namespaced: true,
     state: {
-		computerInfo: "", // 电脑信息
-        moduleList: [], // 模块
-        roleList: [], // 角色
-        menuLabel: {}, // 选中模块
-        smallIconList: [], // 常用模块
-        secondMenuList: [], // 子菜单
+		computerInfo: JSON.parse(sessionStorage.getItem('computerInfo')) || "", // 电脑信息
+        moduleList: JSON.parse(sessionStorage.getItem('moduleList')) || [], // 模块
+        roleList: JSON.parse(sessionStorage.getItem('roleList')) || [], // 角色
+        menuLabel: JSON.parse(sessionStorage.getItem('menuLabel')) || {}, // 选中模块
+        smallIconList: JSON.parse(sessionStorage.getItem('smallIconList')) || [], // 常用模块
+        secondMenuList: JSON.parse(sessionStorage.getItem('secondMenuList')) || [], // 子菜单
     },
     mutations: {
         setComputerInfo(state, data) {
@@ -39,8 +39,15 @@ export default {
     },
     actions: {
         // actions一般是处理异步逻辑
-        // someAction(context, componentData) {
+        // initDataAction(context, componentData) {
         //     context.commit('increment', componentData);
+        //     ...mapMutations({
+        //         setToken: "user/setToken",
+        //         setUserInfo: "user/setUserInfo",
+        //         setModuleList: "common/setModuleList",
+        //         setRoleList: "common/setRoleList"
+        //     }),
+        //     context.commit('setToken', sessionStorage.getItem(''))
         // }
     }
 }

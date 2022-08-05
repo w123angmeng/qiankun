@@ -9,18 +9,27 @@ import axios from './axios'
 // import VueAxios from 'vue-axios'
 
 Vue.prototype.$axios = axios;
-import CommonDialog from '@/components/CommonDialog.vue'
-window.commonComponent = { CommonDialog };
+// import CommonDialog from '@/components/CommonDialog.vue'
+// window.commonComponent = { CommonDialog };
 
 Vue.use(ElementUI);
 import {
     registerMicroApps,
-    start
+    start,
+    initGlobalState
 } from 'qiankun';
 
 Vue.config.productionTip = false;
+
+let globalShow = false
+Vue.prototype.$global = initGlobalState(globalShow)
+Vue.prototype.$global.onGlobalStateChange((state, prev) => {
+    // state: 变更后的状态; prev 变更前的状态
+    console.log('父组件',state, prev);
+  });
 let msg = {
-    store: store
+    store: store,
+    state: globalShow
 }
 registerMicroApps([
     {
@@ -39,9 +48,9 @@ registerMicroApps([
     }
 ]);
 // 启动 qiankun
-start();
+// start();
 new Vue({
-    router,
     store,
+    router,
     render: (h) => h(App),
 }).$mount("#app");

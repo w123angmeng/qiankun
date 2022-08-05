@@ -4,7 +4,7 @@ const webpack = require('webpack')
 const AddAssetHtmlPlugin = require('add-asset-html-webpack-plugin')
 // module.exports = defineConfig({
 module.exports = {  
-//   publicPath: "/",
+  publicPath: "/",
   transpileDependencies: true,
 //   external: {
 //     vue: 'Vue',
@@ -13,14 +13,17 @@ module.exports = {
 //     axios: 'axios',
 
 //   },
+  productionSourceMap: true,
   configureWebpack: {
     // external: {
     //     vue: 'Vue',
     //     'vue-router': 'VueRouter',
-    //     vuex: 'Vuex',
+    //     vuex: 'Vuex',cls
+
     //     axios: 'axios',
         
     //   },
+    devtool: 'source-map',
     plugins: [
         new webpack.DllReferencePlugin({
             context: process.cwd(),
@@ -28,15 +31,15 @@ module.exports = {
         }),
         new AddAssetHtmlPlugin ({
             filepath: path.resolve(__dirname, './public/vendor/vendor.dll.js'),
-            publicPath: './vendor',
-            outputPath: './vendor'
+            publicPath: '/vendor',
+            outputPath: '/vendor'
         })
     ],
     devServer: {
-        // hot: true,
+        hot: true,
         // disableHostCheck: true,
         // 修改默认端口，和注册时一直
-        host: "localhost/",
+        host: "localhost",
         port: 8080,
         open: true,
         // overlay: {
@@ -45,7 +48,12 @@ module.exports = {
         // },
         headers: {
           'Access-Control-Allow-Origin': '*'
-        }
+        },
+        //   proxy: {
+        //     '/outpNurse': {
+        //         target: 'http://localhost:8080/',
+        //     }
+        //   }
     },
     resolve: {
         alias: {

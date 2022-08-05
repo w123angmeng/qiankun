@@ -1,7 +1,7 @@
 export default {
 	namespaced: true,
     state: {
-		patientInfo: {}, // 患者信息
+		patientInfo: JSON.parse(sessionStorage.getItem('patientInfo')) || null, // 患者信息
     },
     mutations: {
 		setPatientInfo(state, data) {

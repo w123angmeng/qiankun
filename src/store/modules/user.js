@@ -1,8 +1,8 @@
 export default {
 	namespaced: true,
     state: {
-		userInfo: {}, // 患者信息
-        token: "", // token
+		userInfo: JSON.parse(sessionStorage.getItem('userInfo')) || {}, // 患者信息
+        token: sessionStorage.getItem('token') || "", // token
     },
     mutations: {
 		setUserInfo(state, data) {
