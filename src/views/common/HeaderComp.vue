@@ -9,7 +9,10 @@
         当前登录科室：微机室 {{userInfo.name}}
         <el-button type="text" @click="btnClickBack"> | 返回首页</el-button>
         <el-button type="text" @click="btnClickLogout"> | 退出登录</el-button>
+        <el-button type="text" @click="btnClickOpen"> | 点击弹窗</el-button>
     </div>
+    <!-- 公共组件 -->
+    <!-- <CommonDialog :dialogData="dialogData" @handleClose="handleClose"></CommonDialog> -->
   </div>
 </template>
 
@@ -18,8 +21,17 @@
 import {mapState} from "vuex";
 export default {
   name: "HeaderComp",
+  data(){
+    return {
+        dialogData: {
+            visible: false,
+            content: "这是父组件-调用公共组件"
+        },
+    }
+  },
   components: {
     // HelloWorld,
+    // CommonDialog: () => import('lib_remote/CommonDialog'),
   },
   computed: {
         ...mapState({
@@ -40,6 +52,12 @@ export default {
         this.$router.push({
                 path: "/login"
         })
+    },
+    btnClickOpen() {
+        this.dialogData.visible = true
+    },
+    handleClose(data) {
+        console.log("父监听到弹窗关闭", data)
     }
   }
 };
